@@ -1,1 +1,17 @@
-<p>main-page works!</p>
+<form [formGroup]="this.form" (ngSubmit)="onSubmit()" >
+
+  <mat-form-field>
+    <mat-label>Name</mat-label>
+    <input formControlName="name" required matInput placeholder="Name">
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Select</mat-label>
+    <mat-select>
+      <mat-option *ngFor="let kind of this.kindOptions" [value]="kind">
+        {{kind}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+</form>
