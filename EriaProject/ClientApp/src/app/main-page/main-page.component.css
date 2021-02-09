@@ -4,3 +4,9 @@ table {
 .main-container {
   margin-top: 20px;
 }
+form {
+  min-width: 350px;
+}
+.date {
+  width: 70%;
+}

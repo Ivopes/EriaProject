@@ -6,6 +6,7 @@ import { Chore } from '../shared/models/task.model';
 import { ChoreService } from '../shared/services/chore.service';
 import { RemoveDialogComponent } from './remove-dialog/remove-dialog.component';
 import { filter, switchMap } from 'rxjs/operators';
+import { interval, Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-main-page',
@@ -30,6 +31,8 @@ export class MainPageComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatSort, {static: false}) sort: MatSort;
 
+  stopwatch$: Subscription = null;
+
   constructor(
     private fb: FormBuilder,
     private choreService: ChoreService,
@@ -41,13 +44,9 @@ export class MainPageComponent implements OnInit, AfterViewInit {
     this.form = this.fb.group({
       name: [''],
       kind: [''],
-      dateStart: [''],
-      dateEnd: [''],
       timeStart: [''],
       timeEnd: [''],
     });
-
-
   }
   ngAfterViewInit() {
     this.choreService.getAll().subscribe(data => {
@@ -60,16 +59,10 @@ export class MainPageComponent implements OnInit, AfterViewInit {
     if (this.form.invalid) {
       return;
     }
-    const chore = this.createChore();
-
-
-
-
-    this.postChore(chore);
+    this.postChore(this.form.value);
 
     this.formDirective.resetForm();
     this.updateTable();
-
   }
 
   postChore(chore: Chore): void {
@@ -82,38 +75,7 @@ export class MainPageComponent implements OnInit, AfterViewInit {
     err => this.snackBar.open('Doslo k chybe, nazev mozna uz existuje', 'Zavrit', {duration: 3000}));
   }
   setTimeInput(name: string): void {
-    this.form.controls[name].setValue(this.getTimeNow());
-  }
-  getTimeNow(): string {
-    const date = new Date();
-    const h = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
-    const m = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
-    return h + ':' + m;
-  }
-  createChore(): Chore {
-    const d = new Date();
-
-    const chore: Chore = {
-      choreID: 0,
-      kind: this.form.controls['kind'].value,
-      name: this.form.controls['name'].value,
-      timeStart: new Date(
-        d.getFullYear(),
-        d.getMonth(),
-        d.getDay(),
-        Number.parseInt(this.form.controls['timeStart'].value.slice(0, 2)),
-        Number.parseInt(this.form.controls['timeStart'].value.slice(3, 5)),
-        0),
-      timeEnd: new Date(
-        d.getFullYear(),
-        d.getMonth(),
-        d.getDay(),
-        Number.parseInt(this.form.controls['timeEnd'].value.slice(0, 2)),
-        Number.parseInt(this.form.controls['timeEnd'].value.slice(3, 5)),
-        0)
-    };
-
-    return chore;
+    this.form.controls[name].setValue(new Date().toISOString().split('.')[0]);
   }
   deleteChore(chore: Chore): void {
     const dialogRef = this.dialog.open(RemoveDialogComponent);
@@ -132,5 +94,15 @@ export class MainPageComponent implements OnInit, AfterViewInit {
   }
   updateTable(): void {
     this.dataSource.data = this.dataSource.data;
+  }
+  startStopwatch(): void {
+    console.log('start');
+    this.setTimeInput('timeStart');
+    this.setTimeInput('timeEnd');
+    this.stopwatch$ = interval(1000).subscribe(() => this.setTimeInput('timeEnd'));
+  }
+  stopStopwatch(): void {
+    this.stopwatch$.unsubscribe();
+    this.stopwatch$ = null;
   }
 }

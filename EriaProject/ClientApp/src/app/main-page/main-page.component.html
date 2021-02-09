@@ -3,7 +3,7 @@
   <mat-card>
 
 
-    <form [formGroup]="this.form" (ngSubmit)="onSubmit()" fxLayout="column" #formDirective="ngForm">
+    <form [formGroup]="this.form" (ngSubmit)="onSubmit()" fxLayout="column" fxLayoutGap="5px" #formDirective="ngForm">
 
       <mat-form-field>
         <mat-label>Název</mat-label>
@@ -20,40 +20,38 @@
       </mat-form-field>
 
       <div fxlayout="row" fxLayoutGap="10px">
-        <mat-form-field>
+        <mat-form-field class="date">
           <mat-label>Začátek</mat-label>
-          <input formControlName="dateStart" required matInput placeholder="Start" type="datetime-local">
+          <input formControlName="timeStart" required matInput placeholder="Start" type="datetime-local">
         </mat-form-field>
 
-        <mat-form-field>
-          <mat-label>Začátek</mat-label>
-          <input formControlName="timeStart" required matInput placeholder="Start" type="time">
-        </mat-form-field>
+        <button mat-raised-button (click)="setTimeInput('timeStart')" type="button" [disabled]="this.stopwatch$">Ted</button>
 
-        <button mat-raised-button (click)="setTimeInput('timeStart')" type="button">Ted</button>
+      </div>
+
+      <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center center">
+
+        <button mat-raised-button color="warn" type="button" (click)="startStopwatch()" [disabled]="this.stopwatch$">Stopky start</button>
+        <button mat-raised-button color="warn" type="button" (click)="stopStopwatch()" [disabled]="!this.stopwatch$">Stop</button>
 
       </div>
 
       <div fxlayout="row" fxLayoutGap="10px">
 
-        <mat-form-field>
+        <mat-form-field class="date">
         <mat-label>Začátek</mat-label>
-          <input formControlName="dateEnd" required matInput placeholder="Start" type="datetime-local">
+          <input formControlName="timeEnd" required matInput placeholder="Start" type="datetime-local">
         </mat-form-field>
 
-        <mat-form-field>
-          <mat-label>Konec</mat-label>
-          <input formControlName="timeEnd" required matInput placeholder="End" type="time">
-        </mat-form-field>
-
-        <button mat-raised-button (click)="setTimeInput('timeEnd')" type="button">Ted</button>
+        <button mat-raised-button (click)="setTimeInput('timeEnd')" type="button" [disabled]="this.stopwatch$">Ted</button>
 
       </div>
 
-      <button mat-raised-button color="primary" type="submit">Uložit</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="this.form.invalid">Uložit</button>
 
     </form>
   </mat-card>
+
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
 
