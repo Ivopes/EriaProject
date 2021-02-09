@@ -1,6 +1,6 @@
 using System;
 
-namespace EriaProject
+namespace test
 {
     public class WeatherForecast
     {
