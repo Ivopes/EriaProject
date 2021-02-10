@@ -1,5 +1,5 @@
 table {
-  width: 60%;
+  width: 100%;
 }
 .main-container {
   margin-top: 20px;
@@ -9,4 +9,8 @@ form {
 }
 .date {
   width: 70%;
+}
+.table-container {
+  width: 70%;
+  margin-bottom: 20px;
 }

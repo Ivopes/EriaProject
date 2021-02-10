@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EriaProject.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace EriaProject.Models.Contexts
     public class ChoreContext : DbContext
     {
         public DbSet<Chore> Chores { get; set; }
+        public DbSet<Kind> Kinds { get; set; }
 
         public ChoreContext(DbContextOptions<ChoreContext> options) : base(options)
         {

@@ -1,6 +1,8 @@
 ﻿using EriaProject.Interfaces.Repositories;
 using EriaProject.Models;
 using EriaProject.Models.Contexts;
+using EriaProject.Models.Entities;
+using EriaProject.Utilities.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,23 +25,84 @@ namespace EriaProject.Controllers
         [HttpGet]
         public async Task<ActionResult<ICollection<Chore>>> GetAllAsync()
         {
-            var result = await _choreService.GetAllAsync();
+            try
+            {
+                var result = await _choreService.GetAllAsync();
 
-            return Ok(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+        [HttpGet("{cID:int}")]
+        public async Task<ActionResult<ICollection<Chore>>> GetByIdAsync(int cID)
+        {
+            try
+            {
+                var result = await _choreService.GetByIdAsync(cID);
+
+                return Ok(result);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
         [HttpPost]
-        public async Task<ActionResult> PostAsync([FromBody] Chore chore)
+        public async Task<ActionResult<Chore>> PostAsync([FromBody] Chore chore)
         {
-            await _choreService.PostAsync(chore);
+            try
+            {
+                await _choreService.PostAsync(chore);
 
-            return Ok();
+                return CreatedAtAction(nameof(PostAsync), new { id = chore.ChoreID }, chore);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
-        [HttpDelete]
-        public async Task<ActionResult> DeleteAsync([FromBody] Chore chore)
+        [HttpDelete("{cID:int}")]
+        public async Task<ActionResult> DeleteByIdAsync(int cID)
         {
-            await _choreService.DeleteAsync(chore);
+            try
+            {
+                await _choreService.DeleteByIdAsync(cID);
 
-            return Ok();
+                return Ok();
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+        [HttpPut]
+        public async Task<ActionResult> PutAsync([FromBody] Chore chore)
+        {
+            try
+            {
+                await _choreService.PutAsync(chore);
+
+                return Ok();
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
     }
 }

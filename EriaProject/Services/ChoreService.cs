@@ -1,5 +1,6 @@
 ﻿using EriaProject.Interfaces.Repositories;
 using EriaProject.Models;
+using EriaProject.Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +16,9 @@ namespace EriaProject.Services
             _choreRepository = choreRepository;
         }
 
-        public async Task DeleteAsync(Chore chore)
+        public async Task DeleteByIdAsync(int cID)
         {
-            await _choreRepository.DeleteAsync(chore);
+            await _choreRepository.DeleteByIdAsync(cID);
         }
 
         public async Task<ICollection<Chore>> GetAllAsync()
@@ -25,9 +26,19 @@ namespace EriaProject.Services
             return await _choreRepository.GetAllAsync();
         }
 
+        public async Task<Chore> GetByIdAsync(int cId)
+        {
+            return await _choreRepository.GetByIdAsync(cId);
+        }
+
         public async Task PostAsync(Chore chore)
         {
             await _choreRepository.PostAsync(chore);
+        }
+
+        public async Task PutAsync(Chore chore)
+        {
+            await _choreRepository.PutAsync(chore);
         }
     }
 }

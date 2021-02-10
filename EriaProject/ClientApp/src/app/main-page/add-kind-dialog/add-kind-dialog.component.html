@@ -1,0 +1,10 @@
+<mat-form-field>
+  <mat-label>Název</mat-label>
+  <input [(ngModel)]="this.name" matInput placeholder="Nazev">
+</mat-form-field>
+
+<div fxLayout="row" fxLayoutGap="10px">
+  <button mat-raised-button color="primary" type="submit" [disabled]="this.name === ''" [matDialogClose]="this.name">Pridat</button>
+
+  <button mat-raised-button matDialogClose>Zavrit</button>
+</div>

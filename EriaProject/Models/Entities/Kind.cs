@@ -6,13 +6,10 @@ using System.Threading.Tasks;
 
 namespace EriaProject.Models.Entities
 {
-    [Table("Chore")]
-    public class Chore
+    [Table("Kind")]
+    public class Kind
     {
-        public int ChoreID { get; set; }
+        public int KindID { get; set; }
         public string Name { get; set; }
-        public string Kind { get; set; }
-        public DateTime TimeStart { get; set; }
-        public DateTime TimeEnd { get; set; }
     }
 }

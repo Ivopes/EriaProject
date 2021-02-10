@@ -11,12 +11,16 @@ import { MaterialModule } from './shared/modules/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RemoveDialogComponent } from './main-page/remove-dialog/remove-dialog.component';
+import { ModifyDialogComponent } from './main-page/modify-dialog/modify-dialog.component';
+import { AddKindDialogComponent } from './main-page/add-kind-dialog/add-kind-dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainPageComponent,
-    RemoveDialogComponent
+    RemoveDialogComponent,
+    ModifyDialogComponent,
+    AddKindDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -29,7 +33,9 @@ import { RemoveDialogComponent } from './main-page/remove-dialog/remove-dialog.c
     FlexLayoutModule,
   ],
   entryComponents: [
-    RemoveDialogComponent
+    RemoveDialogComponent,
+    ModifyDialogComponent,
+    AddKindDialogComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

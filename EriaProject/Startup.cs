@@ -1,4 +1,5 @@
 using EriaProject.Interfaces.Repositories;
+using EriaProject.Interfaces.Services;
 using EriaProject.Models.Contexts;
 using EriaProject.Repositories;
 using EriaProject.Services;
@@ -30,6 +31,8 @@ namespace EriaProject
 
             services.AddTransient<IChoreService, ChoreService>();
             services.AddTransient<IChoreRepository, ChoreRepository>();
+            services.AddTransient<IKindService, KindService>();
+            services.AddTransient<IKindRepository, KindRepository>();
 
             services.AddDbContext<ChoreContext>(options => {
                 options.UseSqlServer(Configuration.GetConnectionString("ChoreConnection"));

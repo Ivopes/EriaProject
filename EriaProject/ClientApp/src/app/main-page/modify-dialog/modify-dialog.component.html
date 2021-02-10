@@ -1,0 +1,33 @@
+<form [formGroup]="this.form" fxLayout="column" fxLayoutGap="5px" #formDirective="ngForm">
+
+  <mat-form-field>
+    <mat-label>Název</mat-label>
+    <input formControlName="name" required matInput placeholder="Name">
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Druh</mat-label>
+    <mat-select formControlName="kind" required>
+      <mat-option *ngFor="let kind of this.kindOptions" [value]="kind.name">
+        {{kind.name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="date">
+    <mat-label>Začátek</mat-label>
+    <input formControlName="timeStart" required matInput placeholder="Start" type="datetime-local">
+  </mat-form-field>
+
+  <mat-form-field class="date">
+    <mat-label>Začátek</mat-label>
+    <input formControlName="timeEnd" required matInput placeholder="Start" type="datetime-local">
+  </mat-form-field>
+
+  <div fxLayout="row" fxLayoutGap="10px">
+    <button mat-raised-button color="primary" type="submit" [disabled]="!this.changed" (click)="sendData()">Upravit</button>
+
+    <button mat-raised-button matDialogClose>Zavrit</button>
+  </div>
+
+</form>

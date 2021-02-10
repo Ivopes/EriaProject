@@ -7,17 +7,24 @@
 
       <mat-form-field>
         <mat-label>Název</mat-label>
-        <input formControlName="name" required matInput placeholder="Name" >
+        <input formControlName="name" required matInput placeholder="Name">
       </mat-form-field>
 
-      <mat-form-field>
-        <mat-label>Druh</mat-label>
-        <mat-select formControlName="kind" required>
-          <mat-option *ngFor="let kind of this.kindOptions" [value]="kind">
-            {{kind}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+      <div>
+        <mat-form-field fxFlex>
+          <mat-label>Druh</mat-label>
+          <mat-select formControlName="kind" required>
+            <mat-option *ngFor="let kind of this.kindOptions" [value]="kind.name">
+              {{kind.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button mat-icon-button fxFlex="20" matTooltip="Pridat novy druh" (click)="addKind()" type="button">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+
 
       <div fxlayout="row" fxLayoutGap="10px">
         <mat-form-field class="date">
@@ -25,25 +32,30 @@
           <input formControlName="timeStart" required matInput placeholder="Start" type="datetime-local">
         </mat-form-field>
 
-        <button mat-raised-button (click)="setTimeInput('timeStart')" type="button" [disabled]="this.stopwatch$">Ted</button>
+        <button mat-raised-button (click)="setTimeInput('timeStart')" type="button"
+          [disabled]="this.stopwatch$">Ted</button>
 
       </div>
 
       <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center center">
 
-        <button mat-raised-button color="warn" type="button" (click)="startStopwatch()" [disabled]="this.stopwatch$">Stopky start</button>
-        <button mat-raised-button color="warn" type="button" (click)="stopStopwatch()" [disabled]="!this.stopwatch$">Stop</button>
+        <button mat-raised-button color="warn" type="button" (click)="startStopwatch()"
+          [disabled]="this.stopwatch$">Stopky start</button>
+        <button mat-raised-button color="warn" type="button" (click)="stopStopwatch()"
+          [disabled]="!this.stopwatch$">Stop</button>
 
       </div>
 
       <div fxlayout="row" fxLayoutGap="10px">
 
         <mat-form-field class="date">
-        <mat-label>Začátek</mat-label>
+          <mat-label>Konec</mat-label>
           <input formControlName="timeEnd" required matInput placeholder="Start" type="datetime-local">
+          <mat-error>Konec musi byt pozdeji, nez zacatek</mat-error>
         </mat-form-field>
 
-        <button mat-raised-button (click)="setTimeInput('timeEnd')" type="button" [disabled]="this.stopwatch$">Ted</button>
+        <button mat-raised-button (click)="setTimeInput('timeEnd')" type="button"
+          [disabled]="this.stopwatch$">Ted</button>
 
       </div>
 
@@ -52,41 +64,86 @@
     </form>
   </mat-card>
 
-  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+  <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign=" start" class="table-container">
+
+    <div fxLayout="row" fxLayoutGap="15px">
+
+      <mat-form-field>
+        <mat-label>Druh</mat-label>
+        <mat-select (valueChange)="applyFilter()" #selectFilter>
+          <mat-option *ngFor="let kind of this.kindOptions" [value]="kind.name">
+            {{kind.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
 
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Nazev </th>
-      <td mat-cell *matCellDef="let chore"> {{chore.name}} </td>
-    </ng-container>
+      <mat-form-field class="date">
+        <mat-label>Datum zacatek</mat-label>
+        <input matInput placeholder="Datum" type="date" (change)="applyFilter()" #dateStartFilter>
+      </mat-form-field>
 
-    <ng-container matColumnDef="kind" >
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Druh </th>
-      <td mat-cell *matCellDef="let chore"> {{chore.kind}} </td>
-    </ng-container>
+      <mat-form-field class="date">
+        <mat-label>Datum konec</mat-label>
+        <input matInput placeholder="Datum" type="date" (change)="applyFilter()" #dateEndFilter>
+      </mat-form-field>
 
-    <ng-container matColumnDef="timeStart">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Zacatek </th>
-      <td mat-cell *matCellDef="let chore"> {{chore.timeStart | date: 'short'}} </td>
-    </ng-container>
+      <button mat-raised-button (click)="resetFilter()">
+        Reset
+      </button>
 
-    <ng-container matColumnDef="timeEnd">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> konec </th>
-      <td mat-cell *matCellDef="let chore"> {{chore.timeEnd | date: 'short'}} </td>
-    </ng-container>
+    </div>
+    <div class="mat-elevation-z8" fxFill>
 
-    <ng-container matColumnDef="delete">
-      <th mat-header-cell *matHeaderCellDef> Delete </th>
-      <td mat-cell *matCellDef="let chore">
+      <table mat-table [dataSource]="dataSource" matSort>
 
-        <button mat-icon-button (click)="deleteChore(chore)" matTooltip="Delete">
-          <mat-icon>delete</mat-icon>
-        </button>
 
-      </td>
-    </ng-container>
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Nazev </th>
+          <td mat-cell *matCellDef="let chore"> {{chore.name}} </td>
+        </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
+        <ng-container matColumnDef="kind">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Druh </th>
+          <td mat-cell *matCellDef="let chore"> {{chore.kind}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="timeStart">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Zacatek </th>
+          <td mat-cell *matCellDef="let chore"> {{chore.timeStart | date: 'short'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="timeEnd">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> konec </th>
+          <td mat-cell *matCellDef="let chore"> {{chore.timeEnd | date: 'short'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="delete">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let chore">
+
+            <button mat-icon-button (click)="deleteChore(chore)" matTooltip="Smazat">
+              <mat-icon>delete</mat-icon>
+            </button>
+
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="modify">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let chore">
+
+            <button mat-raised-button (click)="modifyChore(chore)">
+              Upravit
+            </button>
+
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+  </div>
 </div>

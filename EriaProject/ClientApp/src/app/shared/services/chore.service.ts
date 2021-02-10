@@ -20,14 +20,10 @@ export class ChoreService {
   public post(chore: Chore): Observable<any> {
     return this.httpClient.post(`${this.constants.API_ENDPOINT}/${this.controller}`, chore);
   }
-  public delete(chore: Chore): Observable<any> {
-    const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-      body: chore
-    };
-
-    return this.httpClient.delete(`${this.constants.API_ENDPOINT}/${this.controller}`, options);
+  public delete(cID: number): Observable<any> {
+    return this.httpClient.delete(`${this.constants.API_ENDPOINT}/${this.controller}/${cID}`);
+  }
+  public put(chore: Chore): Observable<Chore> {
+    return this.httpClient.put<Chore>(`${this.constants.API_ENDPOINT}/${this.controller}`, chore);
   }
 }
